@@ -1,0 +1,6 @@
+project:
+  name: open-source-etl
+webserver:
+  port: 8081
+postgres:
+  port: 5435
