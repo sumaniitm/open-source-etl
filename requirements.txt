@@ -1,1 +1,9 @@
-great_expectations==0.15.10
+dbt-core==1.1.1
+dbt-extractor==0.4.1
+dbt-postgres==1.1.1
+great-expectations==0.15.10
+pydantic==1.9.1
+zipp==3.8.0
+aiobotocore==2.3.2
+botocore==1.24.21
+boto3==1.21.21
