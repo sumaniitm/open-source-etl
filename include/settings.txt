@@ -1,0 +1,31 @@
+[s3-details]
+s3_bucket_name = suman-data-exchange
+[entities]
+entity_names = bundesliga-match-scores,frenchligue1-match-scores,laliga-match-scores,premierleague-match-scores,seriea-match-scores
+[file-partition-strategy]
+file_partition_levels = 3
+file_partition_level_1 = year
+file_partition_level_2 = month
+file_partition_level_3 = day
+[postgres-details]
+postgres_db = trackdatalineage
+postgres_host = localhost
+postgres_port = 5432
+postgres_metadata_schema = metadata
+postgres_raw_schema = raw
+postgres_stage_schema = stage
+postgres_metadata_table_name = t_key_value_pairs
+[ge-settings]
+ge-snowflake-datasource = etl_postgres_datasource
+[dbt-settings]
+dbt_dir_name = data_transformations
+global_cli_flags = --no-write-json
+[file-locations-base]
+inbound_incremental_raw =
+inbound_incremental_bad = errors/
+inbound_archive_raw = Archive/raw/
+inbound_archive_bad = Archive/error/
+[ge-settings]
+context_root_dir = great_expectations
+[dbt-settings]
+dbt_manifest_path = target/manifest.json
