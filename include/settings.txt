@@ -21,10 +21,10 @@ ge-snowflake-datasource = etl_postgres_datasource
 dbt_dir_name = data_transformations
 global_cli_flags = --no-write-json
 [file-locations-base]
-inbound_incremental_raw =
-inbound_incremental_bad = errors/
-inbound_archive_raw = Archive/raw/
-inbound_archive_bad = Archive/error/
+inbound_incremental_raw = inbound/incremental/raw/
+inbound_incremental_bad = inbound/incremental/bad/
+inbound_archive_raw = archive/raw/
+inbound_archive_bad = archive/bad/
 [ge-settings]
 context_root_dir = great_expectations
 [dbt-settings]
