@@ -15,41 +15,32 @@ config_version: 3
 # You can use the CLI command `great_expectations datasource new` to help you
 # add a new datasource. Read more at https://docs.greatexpectations.io/docs/guides/connecting_to_your_data/connect_to_data_overview
 datasources:
-  etl_postgres_datasource:
-    class_name: Datasource
+  etl_snowflake_datasource:
+    data_connectors:
+      default_runtime_data_connector_name:
+        module_name: great_expectations.datasource.data_connector
+        batch_identifiers:
+          - default_identifier_name
+        class_name: RuntimeDataConnector
+      default_inferred_data_connector_name:
+        module_name: great_expectations.datasource.data_connector
+        include_schema_name: true
+        class_name: InferredAssetSqlDataConnector
     module_name: great_expectations.datasource
     execution_engine:
-      module_name: great_expectations.execution_engine
       class_name: SqlAlchemyExecutionEngine
+      module_name: great_expectations.execution_engine
       credentials:
-        drivername: ${POSTGRES_DRIVERNAME}
-        host: ${POSTGRES_HOST}
-        port: ${POSTGRES_PORT}
-        username: ${POSTGRES_USERNAME}
-        password: ${POSTGRES_PW}
-        database: ${POSTGRES_DB}
-    data_connectors:
-      default_inferred_data_connector_name:
-        class_name: InferredAssetSqlDataConnector
-
-# This config file supports variable substitution which enables: 1) keeping
-# secrets out of source control & 2) environment-based configuration changes
-# such as staging vs prod.
-#
-# When GE encounters substitution syntax (like `my_key: ${my_value}` or
-# `my_key: $my_value`) in the great_expectations.yml file, it will attempt
-# to replace the value of `my_key` with the value from an environment
-# variable `my_value` or a corresponding key read from this config file,
-# which is defined through the `config_variables_file_path`.
-# Environment variables take precedence over variables defined here.
-#
-# Substitution values defined here can be a simple (non-nested) value,
-# nested value such as a dictionary, or an environment variable (i.e. ${ENV_VAR})
-#
-#
-# https://docs.greatexpectations.io/docs/guides/setup/configuring_data_contexts/how_to_configure_credentials
-
-
+        host: ${SNOWFLAKE_HOST}
+        username: ${SNOWFLAKE_USERNAME}
+        database: ${SNOWFLAKE_DB}
+        query:
+          schema: ${SNOWFLAKE_SCHEMA}
+          warehouse: ${SNOWFLAKE_WAREHOUSE}
+          role: ${SNOWFLAKE_ROLE}
+        password: ${SNOWFLAKE_PASSWORD}
+        drivername: snowflake
+    class_name: Datasource
 config_variables_file_path: uncommitted/config_variables.yml
 
 # The plugins_directory will be added to your python path for custom modules
@@ -81,7 +72,7 @@ stores:
     store_backend:
       class_name: TupleS3StoreBackend
       bucket: 'etl-ge-data-docs-site'
-      prefix: great_expectations/validations/
+      prefix: 'great_expectations/validations/'
 
   evaluation_parameter_store:
     # Evaluation Parameters enable dynamic expectations. Read more here:
@@ -117,20 +108,19 @@ data_docs_sites:
     # set to false to hide how-to buttons in Data Docs
     show_how_to_buttons: true
     store_backend:
-        class_name: TupleFilesystemStoreBackend
-        base_directory: uncommitted/data_docs/local_site/
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/data_docs/local_site/
     site_index_builder:
-        class_name: DefaultSiteIndexBuilder
+      class_name: DefaultSiteIndexBuilder
   s3_site:
     class_name: SiteBuilder
     store_backend:
       class_name: TupleS3StoreBackend
       bucket: 'etl-ge-data-docs-site'
-      prefix: great_expectations/data_docs/
+      prefix: 'great_expectations/data_docs/'
     site_index_builder:
       class_name: DefaultSiteIndexBuilder
       show_cta_footer: true
-
 
 anonymous_usage_statistics:
   enabled: True

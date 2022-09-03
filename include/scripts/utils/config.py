@@ -27,52 +27,49 @@ class Settings(BaseSettings):
 class Config:
     def __init__(self):
         self.generic_path = Path(__file__).parent / "../settings.txt"
-        self.customer_path = Path(__file__).parent / "../customer_settings.txt"
         self.generic_config = cp.ConfigParser()
-        self.customer_config = cp.ConfigParser()
         self.generic_config.read(self.generic_path)
-        self.customer_config.read(self.customer_path)
-        self.entity_list = self.customer_config.get('entities', 'entities_provided_by_customer').split(',')
+        self.entity_list = self.generic_config.get('entities', 'entities_provided_by_customer').split(',')
         self.base_path_raw = self.generic_config.get(
             'file-locations-base', 'inbound_incremental_raw')
         self.base_path_bad = self.generic_config.get(
             'file-locations-base', 'inbound_incremental_bad')
         self.dbt_manifest_path = self.generic_config.get(
             'dbt-settings', 'dbt_manifest_path')
-        self.s3_bucket_name = self.customer_config.get(
+        self.s3_bucket_name = self.generic_config.get(
             's3-details', 's3_bucket_name')
-        self.snowflake_stage = self.customer_config.get(
+        self.snowflake_stage = self.generic_config.get(
             'snowflake-details', 'snowflake_stage')
-        self.snowflake_file_format = self.customer_config.get(
+        self.snowflake_file_format = self.generic_config.get(
             'snowflake-details', 'snowflake_file_format')
-        self.snowflake_raw_schema = self.customer_config.get(
+        self.snowflake_raw_schema = self.generic_config.get(
             'snowflake-details', 'snowflake_raw_schema')
-        self.snowflake_metadata_schema = self.customer_config.get(
+        self.snowflake_metadata_schema = self.generic_config.get(
             'snowflake-details', 'snowflake_metadata_schema')
-        self.snowflake_error_schema = self.customer_config.get(
+        self.snowflake_error_schema = self.generic_config.get(
             'snowflake-details', 'snowflake_error_schema')
-        self.snowflake_stage_schema = self.customer_config.get(
+        self.snowflake_stage_schema = self.generic_config.get(
             'snowflake-details', 'snowflake_stage_schema')
-        self.snowflake_db_name = self.customer_config.get(
+        self.snowflake_db_name = self.generic_config.get(
             'snowflake-details', 'snowflake_db_name')
-        self.snowflake_wh_name = self.customer_config.get(
+        self.snowflake_wh_name = self.generic_config.get(
             'snowflake-details', 'snowflake_wh_name')
-        self.snowflake_role = self.customer_config.get(
+        self.snowflake_role = self.generic_config.get(
             'snowflake-details', 'snowflake_role')
-        self.snowflake_metadata_table_name = self.customer_config.get(
+        self.snowflake_metadata_table_name = self.generic_config.get(
             'snowflake-details', 'snowflake_metadata_table_name')
-        self.dbt_dir_name = self.customer_config.get(
+        self.dbt_dir_name = self.generic_config.get(
             'dbt-settings', 'dbt_dir_name')
         self.dbt_dir_full_path = "/".join([APP_PATH, self.dbt_dir_name])
         self.dbt_manifest_full_path = "/".join(
             [APP_PATH, self.dbt_dir_name, self.dbt_manifest_path])
-        self.global_cli_flags = self.customer_config.get(
+        self.global_cli_flags = self.generic_config.get(
             'dbt-settings', 'global_cli_flags')
-        self.snowflake_account = self.customer_config.get(
+        self.snowflake_account = self.generic_config.get(
             'snowflake-details', 'snowflake_account')
-        self.ge_snowflake_datasource = self.customer_config.get(
+        self.ge_snowflake_datasource = self.generic_config.get(
             'ge-settings', 'ge_snowflake_datasource')
-        self.file_partition_levels = self.customer_config.get(
+        self.file_partition_levels = self.generic_config.get(
             'file-partition-strategy', 'file_partition_levels')
         self.context_root_dir = self.generic_config.get(
             'ge-settings', 'context_root_dir')
@@ -80,7 +77,7 @@ class Config:
 
     def get_file_partition_level(self, level):
         file_partition_level = "_".join(['file_partition_level', level])
-        return self.customer_config.get(
+        return self.generic_config.get(
             'file-partition-strategy', file_partition_level)
 
     def generate_airflow_connnections(self):

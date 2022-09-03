@@ -7,16 +7,19 @@ file_partition_levels = 3
 file_partition_level_1 = year
 file_partition_level_2 = month
 file_partition_level_3 = day
-[postgres-details]
-postgres_db = trackdatalineage
-postgres_host = localhost
-postgres_port = 5432
-postgres_metadata_schema = metadata
-postgres_raw_schema = raw
-postgres_stage_schema = stage
-postgres_metadata_table_name = t_key_value_pairs
+[snowflake-details]
+snowflake_stage = raw_stage
+snowflake_file_format = raw_ff
+snowflake_raw_schema = dbt_raw
+snowflake_error_schema = dbt_data_errors
+snowflake_stage_schema = data_stage
+snowflake_db_name = suman_etl_db
+snowflake_wh_name = suman_etl_wh
+snowflake_role = etl_dev
+snowflake_metadata_schema = pipeline_metadata
+snowflake_metadata_table_name = t_key_val_pairs
 [ge-settings]
-ge-snowflake-datasource = etl_postgres_datasource
+ge-snowflake-datasource = etl_snowflake_datasource
 [dbt-settings]
 dbt_dir_name = data_transformations
 global_cli_flags = --no-write-json
