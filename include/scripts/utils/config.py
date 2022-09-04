@@ -29,7 +29,7 @@ class Config:
         self.generic_path = Path(__file__).parent / "../settings.txt"
         self.generic_config = cp.ConfigParser()
         self.generic_config.read(self.generic_path)
-        self.entity_list = self.generic_config.get('entities', 'entities_provided_by_customer').split(',')
+        self.entity_list = self.generic_config.get('entities', 'entity_names').split(',')
         self.base_path_raw = self.generic_config.get(
             'file-locations-base', 'inbound_incremental_raw')
         self.base_path_bad = self.generic_config.get(
@@ -38,6 +38,8 @@ class Config:
             'dbt-settings', 'dbt_manifest_path')
         self.s3_bucket_name = self.generic_config.get(
             's3-details', 's3_bucket_name')
+        self.file_delimiter = self.generic_config.get(
+            's3-details', 'file_delimiter')
         self.snowflake_stage = self.generic_config.get(
             'snowflake-details', 'snowflake_stage')
         self.snowflake_file_format = self.generic_config.get(
@@ -65,8 +67,7 @@ class Config:
             [APP_PATH, self.dbt_dir_name, self.dbt_manifest_path])
         self.global_cli_flags = self.generic_config.get(
             'dbt-settings', 'global_cli_flags')
-        self.snowflake_account = self.generic_config.get(
-            'snowflake-details', 'snowflake_account')
+        # self.snowflake_account = self.generic_config.get('snowflake-details', 'snowflake_account')
         self.ge_snowflake_datasource = self.generic_config.get(
             'ge-settings', 'ge_snowflake_datasource')
         self.file_partition_levels = self.generic_config.get(
