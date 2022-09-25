@@ -12,6 +12,8 @@ great_expectations/uncommitted/
 #Docker ignore
 .dockerignore
 
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
