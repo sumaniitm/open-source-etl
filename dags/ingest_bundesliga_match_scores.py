@@ -99,7 +99,7 @@ with DAG(
     @task
     def copy_files(file_to_copy):
         s3_resource = boto3.resource('s3')
-        destination = "".join([s3_partition_suffix, file_to_copy.split('/')[-1]])
+        destination = "".join([config.base_path_raw, '/', s3_partition_suffix, file_to_copy.split('/')[-1]])
         origin = "/".join([config.s3_bucket_name, file_to_copy])
         s3_resource.Object(config.s3_bucket_name, destination).copy_from(CopySource=origin)
 
@@ -122,10 +122,11 @@ with DAG(
         except AttributeError:
             s3_client = boto3.client('s3', aws_access_key_id=settings.aws_access_key_id, aws_secret_access_key=settings.aws_secret_access_key)
             obj = s3_client.get_object(Bucket=config.s3_bucket_name, Key=s3_key)
-            data_iter = pd.read_csv(obj['Body'], chunksize = 1, sep=config.file_delimiter)
+            data_iter = pd.read_csv(obj['Body'], chunksize=1, sep=config.file_delimiter)
             df = pd.DataFrame(data_iter.get_chunk())
+            df.rename(columns={'Unnamed: 0': 'data_id'}, inplace=True) ## This is only for the specific dataset I have used
             listOfColms = df.columns.values.tolist()
-            listOfColms.pop(0)
+            #listOfColms.pop(0)
 
         sql = "create or replace external table {0}.{1}".format(config.snowflake_stage_schema, table_name)
         for i in range(len(listOfColms)):
