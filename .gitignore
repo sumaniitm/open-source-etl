@@ -1,3 +1,17 @@
+# dags
+dags/example*.py
+
+# DBT artefacts
+data_transformations/target/
+data_transformations/dbt_packages/
+data_transformations/logs/
+
+# great-expectations files
+great_expectations/uncommitted/
+
+#Docker ignore
+.dockerignore
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
