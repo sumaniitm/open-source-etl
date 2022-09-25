@@ -13,6 +13,7 @@ great_expectations/uncommitted/
 .dockerignore
 
 .idea/
+.astro/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
