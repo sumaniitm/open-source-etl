@@ -19,7 +19,6 @@ import os
 import boto3
 import pandas as pd
 
-snowflake_error_table = "".join(['t_', 'bundesliga_match_scores', '_errors'])
 metadata_key = 'bundesliga_match_scores'
 
 with DAG(
@@ -143,11 +142,11 @@ with DAG(
         python_callable=copy_files
     )
 
-    @task
-    def generate_sql(s3_file_path):
+    def generate_sql(ti, **kwargs):
+        s3_file_path = ti.xcom_pull(task_ids=['list_of_S3_files_to_copy'], key='return_value')[0]
         s3_key = s3_file_path[0]
         s3_file = s3_key.split('/')[-1].split('_')[0]
-        table_name = "".join(['t_', metadata_key, '_external'])
+        table_name = "".join(['t_', kwargs['metadata_key'], '_external'])
 
         try:
             column_mapping_select_sql = " select distinct snowflake_table_column_name " \
@@ -187,13 +186,18 @@ with DAG(
         file_format_string = "".join(['file_format =(FORMAT_NAME = ', config.snowflake_stage_schema,
                                       '.external_table_ff)'])
         sql = "".join([sql, ' ', location_string, ' ', file_format_string])
-        return sql
+        ti.xcom_push(key='external_table_sql', value=sql)
 
-    ext_table_sql = generate_sql(s3_file_path=XComArg(list_of_S3_files_to_copy))
+    generate_external_table_ddl = PythonOperator(
+        task_id='generate_external_table_ddl',
+        provide_context=True,
+        python_callable=generate_sql,
+        op_kwargs={'metadata_key': metadata_key}
+    )
 
     create_external_table = SnowflakeOperator(
         task_id='create_bundesliga_match_scores_external_table',
-        sql=ext_table_sql,
+        sql="{{ ti.xcom_pull(task_ids=['generate_external_table_ddl'], key='external_table_sql')[0] }}",
         warehouse=config.snowflake_wh_name,
         database=config.snowflake_db_name,
         schema=config.snowflake_stage_schema,
