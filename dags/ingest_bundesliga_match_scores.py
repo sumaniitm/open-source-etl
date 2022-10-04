@@ -207,7 +207,7 @@ with DAG(
 
     get_key_type_from_snowflake >> file_sniffer_task >> generate_s3_partition >> generate_metadata_update_sql >> \
     update_s3_partition_metadata >> get_s3_partition_metadata >> list_of_S3_files_to_copy >> copy_files_within_s3 >> \
-    create_external_table
+    generate_external_table_ddl >> create_external_table
 
 
 
